@@ -18,7 +18,13 @@ public:
 
 private:
     void init();
+    void initMenuAndToolBar();
+
+    void updateActionIcons();
+    void loadChangelog();
 
 private:
     Ui::MainWindow *ui;
+
+    QToolBar* m_toolBar{nullptr};
 };

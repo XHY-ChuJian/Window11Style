@@ -57,6 +57,7 @@ class FluentUI3Style : public QProxyStyle
 
 public:
     FluentUI3Style( QStyle* style = nullptr );
+    ~FluentUI3Style();
 
     // QStyle interface
 
@@ -113,6 +114,7 @@ private:
                             QPalette::ColorRole role = QPalette::ButtonText ) const;
 
     void drawLineEditFrame(QPainter *p, const QRectF &rect, const QStyleOption *o, bool isEditable = true) const;
+    inline QColor winUI3Color(enum WINUI3Color col) const;
 
 private:
     mutable QFont assetFont;

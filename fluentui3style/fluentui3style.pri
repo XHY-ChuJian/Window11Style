@@ -2,19 +2,21 @@ QT += svg
 
 HEADERS += \
     $$PWD/fluentui3style.h \
-    $$PWD/customcontrol/dockwidgettitlebar.h \
+    # $$PWD/customcontrol/dockwidgettitlebar.h \
     $$PWD/qhexstring_p.h \
     $$PWD/qstyleanimation_p.h \
-    $$PWD/qstylehelper_p.h
+    $$PWD/qstylehelper_p.h \
+    $$PWD/thememanager.h
 
 SOURCES += \
     $$PWD/fluentui3style.cpp \
-    $$PWD/customcontrol/dockwidgettitlebar.cpp \
+    # $$PWD/customcontrol/dockwidgettitlebar.cpp \
     $$PWD/qstyleanimation.cpp \
-    $$PWD/qstylehelper.cpp
+    $$PWD/qstylehelper.cpp \
+    $$PWD/thememanager.cpp
 
 RESOURCES += \
     $$PWD/resource.qrc
 
 FORMS += \
-    $$PWD/customcontrol/dockwidgettitlebar.ui
+    # $$PWD/customcontrol/dockwidgettitlebar.ui
