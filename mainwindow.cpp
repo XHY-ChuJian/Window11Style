@@ -12,7 +12,7 @@
 #include <QMessageBox>
 #include <fluentui3style.h>
 
-#include <thememanager.h>
+#include <palettemanager.h>
 
 #include <QMenu>
 #include <QAction>
@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QKeySequence>
 
+#include "fluentuiappearance.h"
 #include "ui_mainwindow.h"
 
 #include <QFile>
@@ -32,25 +33,6 @@ QMap<QAction*, QString> actionIconMap;
 // 存储所有需要更新图标的menu及其对应的图标代码
 QMap<QMenu*, QString> menuIconMap;
 
-// 收集菜单项的action
-void collectMenuActions(QMenu* menu)
-{
-    if (!menu) return;
-    
-    QList<QAction*> actions = menu->actions();
-    for (QAction* action : actions) {
-        if (action->menu()) {
-            // 子菜单
-            collectMenuActions(action->menu());
-        } else if (!action->isSeparator()) {
-            // 菜单项，保存图标代码
-            if (!action->icon().isNull()) {
-                // 这里需要一种方法来获取图标代码
-                // 由于initMenu函数中我们知道每个action的图标代码，所以我们在创建时直接存储
-            }
-        }
-    }
-}
 
 QIcon createFluentIcon(const QString& unicode, int pixelSize = 25)
 {
@@ -63,7 +45,7 @@ QIcon createFluentIcon(const QString& unicode, int pixelSize = 25)
 #if ( QT_VERSION >= QT_VERSION_CHECK( 6, 8, 0 ) )
     isDarkTheme = qApp->styleHints()->colorScheme() == Qt::ColorScheme::Dark;
 #else
-    isDarkTheme = ThemeManager::instance().theme() == Theme::Dark;
+    isDarkTheme = fluentUIAppearance.theme() == Theme::Dark;
 #endif
 
     QPixmap pixmap(30 * dpr, 30 * dpr);
@@ -109,7 +91,6 @@ MainWindow::MainWindow( QWidget* parent )
 
     init();
 
-    // 用一首七言绝句初始化comboBox
     ui->comboBox->addItem( "窗含西岭千秋雪" );
     ui->comboBox->addItem( "门泊东吴万里船" );
     ui->comboBox->addItem( "日照香炉生紫烟" );
@@ -131,10 +112,11 @@ void MainWindow::loadChangelog()
     
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        in.setCodec("UTF-8");
+#endif
         QString content = in.readAll();
         file.close();
-        
-        // 按行分割并添加到log控件
         QStringList lines = content.split("\n");
         for (const QString& line : lines) {
             ui->log->append(line);
@@ -424,15 +406,14 @@ void MainWindow::initMenuAndToolBar()
 #else
     themeComboBox->setView(new QListView);
     themeComboBox->setCurrentIndex(
-        ThemeManager::instance().theme() == Theme::Dark ? 1 : 0 );
+        fluentUIAppearance.theme() == Theme::Dark ? 1 : 0 );
     connect( themeComboBox,
              QOverload<int>::of( &QComboBox::currentIndexChanged ),
              this,
              [ = ]( int index )
              {
-                 ThemeManager::instance().setTheme( index == 0 ? Theme::Light
+                 fluentUIAppearance.setTheme( index == 0 ? Theme::Light
                                                                : Theme::Dark );
-                 // 更新图标
                  updateActionIcons();
              } );
 #endif

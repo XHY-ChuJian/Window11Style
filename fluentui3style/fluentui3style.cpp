@@ -18,6 +18,7 @@
 
 #include <array>
 
+#include "fluentuiappearance.h"
 #include "qapplication.h"
 #include "qhexstring_p.h"
 #include "qstyleanimation_p.h"
@@ -25,7 +26,7 @@
 #include "qstyleoption.h"
 
 #if QT_VERSION <= QT_VERSION_CHECK( 6, 8, 0 )
-#include "thememanager.h"
+#include "palettemanager.h"
 #endif
 
 static constexpr int topLevelRoundingRadius = 8;  // Radius for toplevel items like popups for round corners
@@ -957,7 +958,7 @@ inline int getColorSchemeIndex()  // 0 = Light, 1 = Dark
     return scheme == Qt::ColorScheme::Light ? 0 : 1;
 #else
 #if 1
-    return (int)ThemeManager::instance().theme();
+    return (int)fluentUIAppearance.theme();
 #else // 直接读取系统设置，兼容性更好，可随系统变化
 #ifdef Q_OS_WIN
     if ( !isWin11() )

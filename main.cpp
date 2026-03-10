@@ -2,6 +2,7 @@
 #include <QFont>
 #include <QMenu>
 #include <QTextEdit>
+#include "fluentuiappearance.h"
 #include "qboxlayout.h"
 #include "qcombobox.h"
 #include "qdebug.h"
@@ -13,8 +14,6 @@
 #include <QDebug>
 
 #include "mainwindow.h"
-#include "fluentui3style.h"
-#include "thememanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,23 +33,15 @@ int main(int argc, char *argv[])
     font.setHintingPreference(QFont::PreferNoHinting);
     qApp->setFont(font);
 
-//Qt6.8以下没有手动主题修改，手动修改调色板
-#if (QT_VERSION < QT_VERSION_CHECK(6, 8, 0))
-    QObject::connect(&ThemeManager::instance(), &ThemeManager::sigThemeChanged, [&a]() {
-        auto appPalette = a.palette();
-        ThemeManager::instance().applyPalette(appPalette);
-        a.setPalette(appPalette);
-        qApp->setStyle(new FluentUI3Style());
-    });
-    ThemeManager::instance().setTheme(Theme::Dark);
-#else
-    a.styleHints()->setColorScheme(Qt::ColorScheme::Dark);
-    qApp->setStyle(new FluentUI3Style());
-    a.setStyle("windows11");
-#endif
+    fluentUIAppearance.initialize();
 
     MainWindow w;
+
+    //动态切换标题栏颜色建议重启软件
+    // fluentUIAppearance.setMainWindow(&w);
+
     w.show();
+
     return a.exec();
 }
 

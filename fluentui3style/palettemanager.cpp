@@ -1,31 +1,20 @@
-#include "thememanager.h"
+#include "palettemanager.h"
 
-ThemeManager& ThemeManager::instance()
+PaletteManager& PaletteManager::instance()
 {
-    static ThemeManager inst;
+    static PaletteManager inst;
     return inst;
 }
 
-void ThemeManager::setTheme(Theme theme)
+void PaletteManager::applyPalette(QPalette& palette, bool isDark) const
 {
-    m_theme = theme;
-    emit sigThemeChanged(theme);
-}
-
-Theme ThemeManager::theme() const
-{
-    return m_theme;
-}
-
-void ThemeManager::applyPalette(QPalette& palette) const
-{
-    if (m_theme == Theme::Dark)
+    if (isDark)
         applyDark(palette);
     else
         applyLight(palette);
 }
 
-void ThemeManager::applyLight(QPalette& p) const
+void PaletteManager::applyLight(QPalette& p) const
 {
     // Active
     p.setColor(QPalette::Active, QPalette::WindowText, QColor(0,0,0,255));
@@ -52,7 +41,6 @@ void ThemeManager::applyLight(QPalette& p) const
 #if QT_VERSION >= QT_VERSION_CHECK(6,6,0)
     p.setColor(QPalette::Active, QPalette::Accent, QColor(0,90,158,255));
 #endif
-
 
     // Disabled
     p.setColor(QPalette::Disabled, QPalette::WindowText, QColor(120,120,120,255));
@@ -108,7 +96,7 @@ void ThemeManager::applyLight(QPalette& p) const
 #endif
 }
 
-void ThemeManager::applyDark(QPalette& p) const
+void PaletteManager::applyDark(QPalette& p) const
 {
     // Active
     p.setColor(QPalette::Active, QPalette::WindowText, QColor(255,255,255,255));
